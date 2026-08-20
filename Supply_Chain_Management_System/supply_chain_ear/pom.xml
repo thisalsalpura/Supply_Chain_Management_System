@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.thisal.supply_chain_management_system</groupId>
+        <artifactId>Supply_Chain_Management_System</artifactId>
+        <version>1.0</version>
+    </parent>
+
+    <groupId>com.thisal.supply_chain_ear</groupId>
+    <artifactId>supply_chain_ear</artifactId>
+    <name>supply_chain_ear</name>
+    <packaging>ear</packaging>
+
+    <properties>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.thisal.supply_chain_core</groupId>
+            <artifactId>supply_chain_core</artifactId>
+            <type>jar</type>
+        </dependency>
+
+        <dependency>
+            <groupId>com.thisal.supply_chain_ejb</groupId>
+            <artifactId>supply_chain_ejb</artifactId>
+            <type>ejb</type>
+        </dependency>
+
+        <dependency>
+            <groupId>com.thisal.supply_chain_web</groupId>
+            <artifactId>supply_chain_web</artifactId>
+            <type>war</type>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <finalName>${project.name}</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-ear-plugin</artifactId>
+                <version>3.4.0</version>
+                <configuration>
+                    <defaultLibBundleDir>lib</defaultLibBundleDir>
+                    <skinnyWars>true</skinnyWars>
+                    <modules>
+                        <jarModule>
+                            <groupId>com.thisal.supply_chain_core</groupId>
+                            <artifactId>supply_chain_core</artifactId>
+                            <bundleFileName>supply_chain_core.jar</bundleFileName>
+                        </jarModule>
+
+                        <ejbModule>
+                            <groupId>com.thisal.supply_chain_ejb</groupId>
+                            <artifactId>supply_chain_ejb</artifactId>
+                            <bundleFileName>supply_chain_ejb.jar</bundleFileName>
+                        </ejbModule>
+
+                        <webModule>
+                            <groupId>com.thisal.supply_chain_web</groupId>
+                            <artifactId>supply_chain_web</artifactId>
+                            <bundleFileName>supply_chain_web.war</bundleFileName>
+                            <contextRoot>/supply_chain_web</contextRoot>
+                        </webModule>
+                    </modules>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
