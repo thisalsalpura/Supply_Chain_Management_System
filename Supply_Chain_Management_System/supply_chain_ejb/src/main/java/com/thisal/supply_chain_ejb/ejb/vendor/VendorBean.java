@@ -1,5 +1,6 @@
-package com.thisal.supply_chain_ejb.ejb.shipment;
+package com.thisal.supply_chain_ejb.ejb.vendor;
 
+import com.thisal.supply_chain_core.dto.VendorDTO;
 import com.thisal.supply_chain_core.entity.Vendor;
 import com.thisal.supply_chain_core.service.VendorService;
 import jakarta.ejb.Stateless;
@@ -16,18 +17,21 @@ public class VendorBean implements VendorService {
     private EntityManager entityManager;
 
     @Override
-    public Vendor createVendor(String name, String email) {
-        return Vendor.builder()
+    public VendorDTO createVendor(String name, String email) {
+        Vendor vendor = Vendor.builder()
                 ._id(UUID.randomUUID())
                 .name(name)
                 .email(email)
                 .build();
+        entityManager.persist(vendor);
+        return null;
     }
 
     @Override
-    public List<Vendor> getAllVendors() {
-        return entityManager.createQuery("SELECT v FROM Vendor v", Vendor.class)
+    public List<VendorDTO> getAllVendors() {
+        List<Vendor> vendorList = entityManager.createQuery("SELECT v FROM Vendor v", Vendor.class)
                 .getResultList();
+        return null;
     }
 
 }

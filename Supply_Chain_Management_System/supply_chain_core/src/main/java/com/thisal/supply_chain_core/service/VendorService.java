@@ -1,6 +1,6 @@
 package com.thisal.supply_chain_core.service;
 
-import com.thisal.supply_chain_core.entity.Vendor;
+import com.thisal.supply_chain_core.dto.VendorDTO;
 import jakarta.ejb.Local;
 
 import java.util.List;
@@ -8,8 +8,8 @@ import java.util.List;
 @Local
 public interface VendorService {
 
-    Vendor createVendor(String name, String email);
+    VendorDTO createVendor(String name, String email);
 
-    List<Vendor> getAllVendors();
+    List<VendorDTO> getAllVendors();
 
 }
