@@ -14,6 +14,10 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@NamedQueries({
+        @NamedQuery(name = "Vendor.findAll", query = "SELECT v FROM Vendor v"),
+        @NamedQuery(name = "Vendor.findByEmail", query = "SELECT v FROM Vendor v WHERE v.email=:email")
+})
 public class Vendor {
 
     @Id

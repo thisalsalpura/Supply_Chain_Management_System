@@ -1,0 +1,15 @@
+package com.thisal.supply_chain_core.mapper;
+
+import com.thisal.supply_chain_core.dto.VendorDTO;
+import com.thisal.supply_chain_core.entity.Vendor;
+
+import java.util.List;
+
+@org.mapstruct.Mapper(componentModel = "cdi")
+public interface Mapper {
+
+    VendorDTO toVendorDTO(Vendor vendor);
+
+    List<VendorDTO> toVendorDTOList(List<Vendor> vendors);
+
+}
