@@ -14,7 +14,6 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.PersistenceException;
 
 import java.util.List;
-import java.util.UUID;
 
 @Stateless
 public class VendorBean implements VendorService {
@@ -32,14 +31,13 @@ public class VendorBean implements VendorService {
     @Override
     public VendorDTO createVendor(String name, String email) {
         Vendor existingVendor = entityManager.createNamedQuery("Vendor.findByEmail", Vendor.class)
-                .setParameter("email", email)
-                .getSingleResult();
+                .setParameter("email", email.trim().toLowerCase())
+                .getResultList().stream().findFirst().orElse(null);
         if (existingVendor != null) {
             logEvent.fire("Vendor with " + email + " is already Registered.");
             throw new VendorAlreadyExistsException("Vendor with " + email + " is already Registered.");
         } else {
             Vendor vendor = Vendor.builder()
-                    ._id(UUID.randomUUID())
                     .name(name)
                     .email(email.trim().toLowerCase())
                     .build();
