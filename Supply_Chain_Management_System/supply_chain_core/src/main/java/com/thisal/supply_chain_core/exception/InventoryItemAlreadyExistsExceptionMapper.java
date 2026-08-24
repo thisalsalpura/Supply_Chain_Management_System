@@ -7,12 +7,12 @@ import jakarta.ws.rs.ext.ExceptionMapper;
 import jakarta.ws.rs.ext.Provider;
 
 @Provider
-public class VendorNotFoundExceptionMapper implements ExceptionMapper<VendorNotFoundException> {
+public class InventoryItemAlreadyExistsExceptionMapper implements ExceptionMapper<InventoryItemAlreadyExistsException> {
 
     @Override
-    public Response toResponse(VendorNotFoundException exception) {
+    public Response toResponse(InventoryItemAlreadyExistsException exception) {
         ResponseModel responseModel = ResponseModel.builder()
-                .status(ResponseStatus.NOT_FOUND)
+                .status(ResponseStatus.BAD_REQUEST)
                 .message(exception.getMessage())
                 .build();
         return Response.status(responseModel.getStatus().getHttpStatus())
