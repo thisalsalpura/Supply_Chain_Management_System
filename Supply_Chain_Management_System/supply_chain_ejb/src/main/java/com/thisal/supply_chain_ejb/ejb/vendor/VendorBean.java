@@ -1,10 +1,13 @@
 package com.thisal.supply_chain_ejb.ejb.vendor;
 
 import com.thisal.supply_chain_core.annotation.Console;
-import com.thisal.supply_chain_core.dto.VendorDTO;
 import com.thisal.supply_chain_core.entity.Vendor;
+import com.thisal.supply_chain_core.enums.ResponseStatus;
+import com.thisal.supply_chain_core.enums.VendorStatus;
 import com.thisal.supply_chain_core.exception.VendorAlreadyExistsException;
+import com.thisal.supply_chain_core.exception.VendorNotFoundException;
 import com.thisal.supply_chain_core.mapper.Mapper;
+import com.thisal.supply_chain_core.model.ResponseModel;
 import com.thisal.supply_chain_core.service.VendorService;
 import jakarta.ejb.Stateless;
 import jakarta.enterprise.event.Event;
@@ -14,7 +17,6 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.PersistenceException;
 
 import java.util.List;
-import java.util.UUID;
 
 @Stateless
 public class VendorBean implements VendorService {
@@ -30,35 +32,61 @@ public class VendorBean implements VendorService {
     private Event<String> logEvent;
 
     @Override
-    public VendorDTO createVendor(String name, String email) {
+    public ResponseModel createVendor(String name, String email) {
         Vendor existingVendor = entityManager.createNamedQuery("Vendor.findByEmail", Vendor.class)
-                .setParameter("email", email)
-                .getSingleResult();
+                .setParameter("email", email.trim().toLowerCase())
+                .getResultList().stream().findFirst().orElse(null);
         if (existingVendor != null) {
-            logEvent.fire("Vendor with " + email + " is already Registered.");
-            throw new VendorAlreadyExistsException("Vendor with " + email + " is already Registered.");
+            logEvent.fire("Vendor with " + email + " is already Registered!");
+            throw new VendorAlreadyExistsException("Vendor with " + email + " is already Registered!");
         } else {
             Vendor vendor = Vendor.builder()
-                    ._id(UUID.randomUUID())
                     .name(name)
                     .email(email.trim().toLowerCase())
                     .build();
             try {
                 entityManager.persist(vendor);
                 entityManager.flush();
-                return mapper.toVendorDTO(vendor);
+                logEvent.fire("Vendor created Successfully!");
+                return ResponseModel.builder()
+                        .status(ResponseStatus.OK)
+                        .payload(mapper.toVendorDTO(vendor))
+                        .message("Vendor created Successfully!")
+                        .build();
             } catch (PersistenceException e) {
-                logEvent.fire("Something went Wrong! Please try again Later.");
-                throw new RuntimeException(e);
+                logEvent.fire(e.getMessage());
+                throw new RuntimeException(e.getMessage());
             }
         }
     }
 
     @Override
-    public List<VendorDTO> getAllVendors() {
+    public ResponseModel approveVendor(String email) {
+        Vendor vendor = entityManager.createNamedQuery("Vendor.findByEmail", Vendor.class)
+                .setParameter("email", email.trim().toLowerCase())
+                .getResultList().stream().findFirst().orElse(null);
+        if (vendor != null) {
+            vendor.setVendorStatus(VendorStatus.ACTIVE);
+            logEvent.fire("Vendor approved Successfully!");
+            return ResponseModel.builder()
+                    .status(ResponseStatus.OK)
+                    .payload(mapper.toVendorDTO(vendor))
+                    .message("Vendor approved Successfully!")
+                    .build();
+        } else {
+            logEvent.fire("Vendor with " + email + " is not Found!");
+            throw new VendorNotFoundException("Vendor with " + email + " is not Found!");
+        }
+    }
+
+    @Override
+    public ResponseModel getAllVendors() {
         List<Vendor> vendorList = entityManager.createNamedQuery("Vendor.findAll", Vendor.class)
                 .getResultList();
-        return mapper.toVendorDTOList(vendorList);
+        return ResponseModel.builder()
+                .status(ResponseStatus.OK)
+                .payload(mapper.toVendorDTOList(vendorList))
+                .build();
     }
 
 }
