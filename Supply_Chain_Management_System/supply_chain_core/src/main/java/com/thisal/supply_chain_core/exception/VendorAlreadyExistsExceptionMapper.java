@@ -13,7 +13,6 @@ public class VendorAlreadyExistsExceptionMapper implements ExceptionMapper<Vendo
     public Response toResponse(VendorAlreadyExistsException exception) {
         ResponseModel responseModel = ResponseModel.builder()
                 .status(ResponseStatus.BAD_REQUEST)
-                .payload(null)
                 .message(exception.getMessage())
                 .build();
         return Response.status(responseModel.getStatus().getHttpStatus())

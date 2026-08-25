@@ -8,8 +8,8 @@ import lombok.Getter;
 @Builder
 public class ResponseModel {
 
-    ResponseStatus status;
-    Object payload;
-    String message;
+    private ResponseStatus status;
+    private Object payload;
+    private String message;
 
 }
