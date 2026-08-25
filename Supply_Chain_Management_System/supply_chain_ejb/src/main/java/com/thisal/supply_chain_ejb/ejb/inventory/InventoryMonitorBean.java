@@ -2,6 +2,7 @@ package com.thisal.supply_chain_ejb.ejb.inventory;
 
 import com.thisal.supply_chain_core.annotation.Console;
 import com.thisal.supply_chain_core.entity.InventoryItem;
+import com.thisal.supply_chain_core.model.LowStockAlertModel;
 import jakarta.ejb.Schedule;
 import jakarta.ejb.Singleton;
 import jakarta.ejb.Startup;
@@ -10,6 +11,7 @@ import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Singleton
@@ -22,6 +24,9 @@ public class InventoryMonitorBean {
     @Inject
     @Console
     private Event<String> logEvent;
+
+    @Inject
+    private Event<LowStockAlertModel> lowStockAlertEvent;
 
     @Schedule(hour = "*", minute = "*", second = "0, 30", persistent = false)
     public void checkLowStock() {
@@ -39,6 +44,11 @@ public class InventoryMonitorBean {
                         .append(" |");
             }
             logEvent.fire(stringBuilder.toString());
+            List<String> skuList = inventoryItemList.stream().map(InventoryItem::getSku).toList();
+            lowStockAlertEvent.fire(LowStockAlertModel.builder()
+                    .affectedSkus(skuList)
+                    .detectedAt(LocalDateTime.now())
+                    .build());
         }
     }
 
