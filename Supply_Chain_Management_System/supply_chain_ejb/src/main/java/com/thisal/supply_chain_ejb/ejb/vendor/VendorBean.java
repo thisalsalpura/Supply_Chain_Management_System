@@ -1,5 +1,6 @@
 package com.thisal.supply_chain_ejb.ejb.vendor;
 
+import com.thisal.supply_chain_core.annotation.Audited;
 import com.thisal.supply_chain_core.annotation.Console;
 import com.thisal.supply_chain_core.entity.Vendor;
 import com.thisal.supply_chain_core.enums.ResponseStatus;
@@ -19,6 +20,7 @@ import jakarta.persistence.PersistenceException;
 import java.util.List;
 
 @Stateless
+@Audited
 public class VendorBean implements VendorService {
 
     @PersistenceContext(unitName = "supply_chainPU")
