@@ -37,11 +37,12 @@ public class InventoryItem {
     @Column(name = "reorder_threshold", nullable = false)
     private int reorderThreshold;
 
+    @Setter(AccessLevel.NONE)
     @Enumerated(EnumType.STRING)
     @Column(name = "stock_status", nullable = false, length = 15)
     private StockStatus stockStatus;
 
-    @Setter
+    @Setter(AccessLevel.NONE)
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 

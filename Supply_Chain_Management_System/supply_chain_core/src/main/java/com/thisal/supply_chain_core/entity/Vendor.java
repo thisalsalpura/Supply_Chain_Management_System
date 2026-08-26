@@ -31,7 +31,7 @@ public class Vendor {
     private String email;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "vendor_status", nullable = false, length = 10)
+    @Column(name = "vendor_status", nullable = false, length = 15)
     private VendorStatus vendorStatus;
 
     @Setter(AccessLevel.NONE)
@@ -40,7 +40,7 @@ public class Vendor {
 
     @PrePersist
     protected void onCreate() {
-        this.vendorStatus = VendorStatus.PENDING;
+        if (this.vendorStatus == null) this.vendorStatus = VendorStatus.PENDING;
         this.createdAt = LocalDateTime.now();
     }
 
