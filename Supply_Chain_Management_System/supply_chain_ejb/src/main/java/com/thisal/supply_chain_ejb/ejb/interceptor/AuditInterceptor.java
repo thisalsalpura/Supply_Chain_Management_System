@@ -2,6 +2,7 @@ package com.thisal.supply_chain_ejb.ejb.interceptor;
 
 import com.thisal.supply_chain_core.annotation.Audited;
 import com.thisal.supply_chain_core.annotation.Console;
+import jakarta.annotation.Priority;
 import jakarta.enterprise.event.Event;
 import jakarta.inject.Inject;
 import jakarta.interceptor.AroundInvoke;
@@ -12,6 +13,7 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 
 @Interceptor
+@Priority(Interceptor.Priority.APPLICATION)
 @Audited
 public class AuditInterceptor {
 
