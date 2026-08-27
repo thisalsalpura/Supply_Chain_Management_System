@@ -8,6 +8,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum ResponseStatus {
     OK(Response.Status.OK),
+    CONFLICT(Response.Status.CONFLICT),
     NOT_FOUND(Response.Status.NOT_FOUND),
     BAD_REQUEST(Response.Status.BAD_REQUEST),
     UNAUTHORIZED(Response.Status.UNAUTHORIZED),
