@@ -16,6 +16,9 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@NamedQueries({
+        @NamedQuery(name = "Order.findAll", query = "SELECT o FROM Order o")
+})
 public class Order {
 
     @Id
@@ -42,6 +45,11 @@ public class Order {
     protected void onCreate() {
         if (this.orderStatus == null) this.orderStatus = OrderStatus.PENDING;
         this.createdAt = LocalDateTime.now();
+    }
+
+    public void addOrderItem(OrderItem orderItem) {
+        orderItem.setOrder(this);
+        orderItems.add(orderItem);
     }
 
 }
