@@ -1,7 +1,7 @@
 package com.thisal.supply_chain_web.web.rest.resource;
 
 import com.thisal.supply_chain_core.model.ResponseModel;
-import com.thisal.supply_chain_core.record.PlaceOrderRequestRecord;
+import com.thisal.supply_chain_core.record.OrderRequestRecord;
 import com.thisal.supply_chain_core.service.OrderService;
 import jakarta.ejb.EJB;
 import jakarta.enterprise.context.RequestScoped;
@@ -17,10 +17,11 @@ public class OrderREST {
     private OrderService orderService;
 
     @POST
+    @Path("/{vendorEmail}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response placeOrder(PlaceOrderRequestRecord placeOrderRequestRecord) {
-        ResponseModel responseModel = orderService.placeOrder(placeOrderRequestRecord.vendorEmail(), placeOrderRequestRecord.skus(), placeOrderRequestRecord.qty());
+    public Response placeOrder(@PathParam("vendorEmail") String vendorEmail, OrderRequestRecord orderRequestRecord) {
+        ResponseModel responseModel = orderService.placeOrder(vendorEmail, orderRequestRecord.orderRequestDTOs());
         return Response.status(responseModel.getStatus().getHttpStatus())
                 .entity(responseModel)
                 .build();

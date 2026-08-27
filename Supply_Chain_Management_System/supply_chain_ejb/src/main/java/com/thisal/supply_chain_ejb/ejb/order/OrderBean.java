@@ -11,6 +11,7 @@ import com.thisal.supply_chain_core.exception.InsufficientStockException;
 import com.thisal.supply_chain_core.exception.InventoryItemNotFoundException;
 import com.thisal.supply_chain_core.exception.VendorNotFoundException;
 import com.thisal.supply_chain_core.mapper.Mapper;
+import com.thisal.supply_chain_core.dto.OrderRequestDTO;
 import com.thisal.supply_chain_core.model.ResponseModel;
 import com.thisal.supply_chain_core.service.OrderService;
 import jakarta.ejb.Stateless;
@@ -39,7 +40,7 @@ public class OrderBean implements OrderService {
 
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public ResponseModel placeOrder(String vendorEmail, List<String> skus, int qty) {
+    public ResponseModel placeOrder(String vendorEmail, List<OrderRequestDTO> orderRequestDTOs) {
         Vendor vendor = entityManager.createNamedQuery("Vendor.findByEmail", Vendor.class)
                 .setParameter("email", vendorEmail.trim().toLowerCase())
                 .getResultList().stream().findFirst().orElse(null);
@@ -47,21 +48,21 @@ public class OrderBean implements OrderService {
             Order order = Order.builder()
                     .vendor(vendor)
                     .build();
-            for (String sku : skus) {
+            for (OrderRequestDTO orderRequestDTO : orderRequestDTOs) {
                 InventoryItem inventoryItem = entityManager.createNamedQuery("InventoryItem.findBySku", InventoryItem.class)
-                        .setParameter("sku", sku)
+                        .setParameter("sku", orderRequestDTO.getSku())
                         .getResultList().stream().findFirst().orElseThrow(() -> {
-                            logEvent.fire("Inventory Item with " + sku + " is not Found!");
-                            return new InventoryItemNotFoundException("Inventory Item with " + sku + " is not Found!");
+                            logEvent.fire("Inventory Item with " + orderRequestDTO.getSku() + " is not Found!");
+                            return new InventoryItemNotFoundException("Inventory Item with " + orderRequestDTO.getSku() + " is not Found!");
                         });
-                if (inventoryItem.getQtyOnHand() < qty) {
+                if (inventoryItem.getQtyOnHand() < orderRequestDTO.getQty()) {
                     logEvent.fire("Inventory Item with " + inventoryItem.getSku() + " is only have " + inventoryItem.getQtyOnHand() + " Items!");
                     throw new InsufficientStockException("Inventory Item with " + inventoryItem.getSku() + " is only have " + inventoryItem.getQtyOnHand() + " Items!");
                 } else {
-                    inventoryItem.setQtyOnHand(inventoryItem.getQtyOnHand() - qty);
+                    inventoryItem.setQtyOnHand(inventoryItem.getQtyOnHand() - orderRequestDTO.getQty());
                     OrderItem orderItem = OrderItem.builder()
                             .inventoryItem(inventoryItem)
-                            .qty(qty)
+                            .qty(orderRequestDTO.getQty())
                             .build();
                     order.addOrderItem(orderItem);
                 }
