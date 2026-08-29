@@ -36,7 +36,7 @@ public class PasswordHasher {
             byte[] actualHash = pbkdf2(password.toCharArray(), salt);
             return MessageDigest.isEqual(expectedHash, actualHash);
         } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
-            throw new RuntimeException(e);
+            return false;
         }
     }
 
