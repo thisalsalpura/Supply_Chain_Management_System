@@ -19,6 +19,11 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@NamedQueries({
+        @NamedQuery(name = "RefreshToken.findByToken", query = "SELECT rt FROM RefreshToken rt WHERE rt.token=:token"),
+        @NamedQuery(name = "RefreshToken.deleteByToken", query = "DELETE FROM RefreshToken rt WHERE rt.token=:token"),
+        @NamedQuery(name = "RefreshToken.deleteExpired", query = "DELETE FROM RefreshToken rt WHERE rt.expiresAt < :now")
+})
 public class RefreshToken {
 
     @Id
