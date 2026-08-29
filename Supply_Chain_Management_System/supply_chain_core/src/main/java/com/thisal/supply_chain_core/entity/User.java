@@ -16,7 +16,6 @@ import java.util.UUID;
 @AllArgsConstructor
 @Builder
 @NamedQueries({
-        @NamedQuery(name = "User.findAll", query = "SELECT u FROM User u"),
         @NamedQuery(name = "User.findByUsername", query = "SELECT u FROM User u WHERE u.username=:username")
 })
 public class User {
