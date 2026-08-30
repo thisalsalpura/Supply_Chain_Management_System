@@ -5,6 +5,7 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import org.eclipse.microprofile.config.ConfigProvider;
 
 import java.time.Instant;
 import java.util.ArrayList;
@@ -13,7 +14,9 @@ import java.util.List;
 
 public class JWTUtil {
 
-    private static final String SECRET = "+>7K4Vt1TIdmr$|#^MP)(S.sO%ga=;KZPCrKaDg7aZ9";
+    private static final String SECRET = ConfigProvider.getConfig()
+            .getOptionalValue("jwt.secret", String.class)
+            .orElseThrow(() -> new IllegalStateException("jwt.secret is not configured! Set JWT_SECRET Environment Variable."));
     private static final Algorithm ALGORITHM = Algorithm.HMAC256(SECRET);
     private static final long EXPIRATION_TIME = 3600;
     private static final JWTVerifier VERIFIER = JWT.require(ALGORITHM).build();

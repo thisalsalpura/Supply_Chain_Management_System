@@ -7,6 +7,7 @@ import com.thisal.supply_chain_core.enums.ResponseStatus;
 import com.thisal.supply_chain_core.enums.Role;
 import com.thisal.supply_chain_core.exception.UserAlreadyExistsException;
 import com.thisal.supply_chain_core.model.ResponseModel;
+import com.thisal.supply_chain_core.record.UserPrincipalRecord;
 import com.thisal.supply_chain_core.service.UserService;
 import jakarta.ejb.Stateless;
 import jakarta.enterprise.event.Event;
@@ -15,6 +16,8 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.PersistenceException;
 
+import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -61,6 +64,25 @@ public class UserBean implements UserService {
                 logEvent.fire(e.getMessage());
                 throw new RuntimeException(e.getMessage());
             }
+        }
+    }
+
+    @Override
+    public Optional<UserPrincipalRecord> login(String username, String password) {
+        User user = entityManager.createNamedQuery("User.findByUsername", User.class)
+                .setParameter("username", username.trim().toLowerCase())
+                .getResultList().stream().findFirst().orElse(null);
+        if (user != null) {
+            if (passwordHasher.verify(password, user.getPassword())) {
+                List<String> roles = user.getRoles().stream()
+                        .map(Enum::name)
+                        .toList();
+                return Optional.of(new UserPrincipalRecord(user.getUsername(), roles));
+            } else {
+                return Optional.empty();
+            }
+        } else {
+            return Optional.empty();
         }
     }
 
