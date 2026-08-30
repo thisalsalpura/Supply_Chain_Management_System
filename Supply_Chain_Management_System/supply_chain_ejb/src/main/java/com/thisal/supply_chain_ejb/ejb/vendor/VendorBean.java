@@ -10,6 +10,9 @@ import com.thisal.supply_chain_core.exception.VendorNotFoundException;
 import com.thisal.supply_chain_core.mapper.Mapper;
 import com.thisal.supply_chain_core.model.ResponseModel;
 import com.thisal.supply_chain_core.service.VendorService;
+import jakarta.annotation.security.DeclareRoles;
+import jakarta.annotation.security.PermitAll;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.ejb.Stateless;
 import jakarta.enterprise.event.Event;
 import jakarta.inject.Inject;
@@ -21,6 +24,8 @@ import java.util.List;
 
 @Stateless
 @Audited
+@DeclareRoles({"ADMIN", "WAREHOUSE_MANAGER", "VENDOR", "USER"})
+@RolesAllowed({"ADMIN", "WAREHOUSE_MANAGER"})
 public class VendorBean implements VendorService {
 
     @PersistenceContext(unitName = "supply_chainPU")
@@ -82,6 +87,7 @@ public class VendorBean implements VendorService {
     }
 
     @Override
+    @PermitAll
     public ResponseModel getAllVendors() {
         List<Vendor> vendorList = entityManager.createNamedQuery("Vendor.findAll", Vendor.class)
                 .getResultList();
