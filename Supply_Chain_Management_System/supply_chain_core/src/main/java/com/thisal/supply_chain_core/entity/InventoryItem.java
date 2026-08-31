@@ -39,7 +39,7 @@ public class InventoryItem {
 
     @Setter(AccessLevel.NONE)
     @Enumerated(EnumType.STRING)
-    @Column(name = "stock_status", nullable = false, length = 15)
+    @Column(name = "stock_status", nullable = false, length = 20)
     private StockStatus stockStatus;
 
     @Setter(AccessLevel.NONE)

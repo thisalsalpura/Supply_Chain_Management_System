@@ -18,11 +18,14 @@ public class JWTAuthMechanism implements HttpAuthenticationMechanism {
     @Override
     public AuthenticationStatus validateRequest(HttpServletRequest request, HttpServletResponse response, HttpMessageContext httpMessageContext) throws AuthenticationException {
         String authHeader = request.getHeader("Authorization");
+        System.out.println("DEBUG: authHeader=" + authHeader);
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             String token = authHeader.substring(7);
+            System.out.println("DEBUG: token=" + token);
             if (JWTUtil.isValidToken(token)) {
                 String username = JWTUtil.getUsernameFromToken(token);
                 List<String> roleList = JWTUtil.getRolesFromToken(token);
+                System.out.println("DEBUG: username=" + username + " roles=" + roleList);
                 HashSet<String> roles = new HashSet<>(roleList);
                 return httpMessageContext.notifyContainerAboutLogin(username, roles);
             }

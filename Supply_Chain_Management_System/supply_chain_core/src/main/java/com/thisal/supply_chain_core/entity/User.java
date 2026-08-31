@@ -33,7 +33,7 @@ public class User {
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
     @Enumerated(EnumType.STRING)
-    @Column(name = "role", nullable = false, length = 15)
+    @Column(name = "role", nullable = false, length = 20)
     @Builder.Default
     private Set<Role> roles = new HashSet<>();
 
