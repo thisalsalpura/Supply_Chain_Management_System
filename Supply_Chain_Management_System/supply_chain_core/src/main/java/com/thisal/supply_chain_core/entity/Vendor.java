@@ -31,7 +31,7 @@ public class Vendor {
     private String email;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "vendor_status", nullable = false, length = 15)
+    @Column(name = "vendor_status", nullable = false, length = 20)
     private VendorStatus vendorStatus;
 
     @Setter(AccessLevel.NONE)

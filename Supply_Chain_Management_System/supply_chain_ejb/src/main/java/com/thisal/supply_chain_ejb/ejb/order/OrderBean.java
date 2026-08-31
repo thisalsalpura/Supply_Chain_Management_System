@@ -14,6 +14,7 @@ import com.thisal.supply_chain_core.mapper.Mapper;
 import com.thisal.supply_chain_core.dto.OrderRequestDTO;
 import com.thisal.supply_chain_core.model.ResponseModel;
 import com.thisal.supply_chain_core.service.OrderService;
+import jakarta.annotation.security.PermitAll;
 import jakarta.ejb.Stateless;
 import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
@@ -39,6 +40,7 @@ public class OrderBean implements OrderService {
     private Event<String> logEvent;
 
     @Override
+    @PermitAll
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public ResponseModel placeOrder(String vendorEmail, List<OrderRequestDTO> orderRequestDTOs) {
         Vendor vendor = entityManager.createNamedQuery("Vendor.findByEmail", Vendor.class)
@@ -82,6 +84,7 @@ public class OrderBean implements OrderService {
     }
 
     @Override
+    @PermitAll
     public ResponseModel getAllOrders() {
         List<Order> orderList = entityManager.createNamedQuery("Order.findAll", Order.class)
                 .getResultList();

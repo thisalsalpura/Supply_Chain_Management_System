@@ -3,6 +3,7 @@ package com.thisal.supply_chain_web.web.rest.resource;
 import com.thisal.supply_chain_core.model.ResponseModel;
 import com.thisal.supply_chain_core.record.OrderRequestRecord;
 import com.thisal.supply_chain_core.service.OrderService;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.ejb.EJB;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.ws.rs.*;
@@ -20,6 +21,7 @@ public class OrderREST {
     @Path("/{vendorEmail}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed({"WAREHOUSE_MANAGER", "VENDOR"})
     public Response placeOrder(@PathParam("vendorEmail") String vendorEmail, OrderRequestRecord orderRequestRecord) {
         ResponseModel responseModel = orderService.placeOrder(vendorEmail, orderRequestRecord.orderRequestDTOs());
         return Response.status(responseModel.getStatus().getHttpStatus())

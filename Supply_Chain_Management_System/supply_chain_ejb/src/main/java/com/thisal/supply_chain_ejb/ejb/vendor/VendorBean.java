@@ -10,6 +10,8 @@ import com.thisal.supply_chain_core.exception.VendorNotFoundException;
 import com.thisal.supply_chain_core.mapper.Mapper;
 import com.thisal.supply_chain_core.model.ResponseModel;
 import com.thisal.supply_chain_core.service.VendorService;
+import jakarta.annotation.security.DeclareRoles;
+import jakarta.annotation.security.PermitAll;
 import jakarta.ejb.Stateless;
 import jakarta.enterprise.event.Event;
 import jakarta.inject.Inject;
@@ -21,6 +23,7 @@ import java.util.List;
 
 @Stateless
 @Audited
+@DeclareRoles({"ADMIN", "WAREHOUSE_MANAGER", "VENDOR", "USER"})
 public class VendorBean implements VendorService {
 
     @PersistenceContext(unitName = "supply_chainPU")
@@ -34,6 +37,7 @@ public class VendorBean implements VendorService {
     private Event<String> logEvent;
 
     @Override
+    @PermitAll
     public ResponseModel createVendor(String name, String email) {
         Vendor existingVendor = entityManager.createNamedQuery("Vendor.findByEmail", Vendor.class)
                 .setParameter("email", email.trim().toLowerCase())
@@ -63,6 +67,7 @@ public class VendorBean implements VendorService {
     }
 
     @Override
+    @PermitAll
     public ResponseModel approveVendor(String email) {
         Vendor vendor = entityManager.createNamedQuery("Vendor.findByEmail", Vendor.class)
                 .setParameter("email", email.trim().toLowerCase())
@@ -82,6 +87,7 @@ public class VendorBean implements VendorService {
     }
 
     @Override
+    @PermitAll
     public ResponseModel getAllVendors() {
         List<Vendor> vendorList = entityManager.createNamedQuery("Vendor.findAll", Vendor.class)
                 .getResultList();
