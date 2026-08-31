@@ -15,8 +15,13 @@ import java.util.List;
 @ApplicationScoped
 public class JWTAuthMechanism implements HttpAuthenticationMechanism {
 
+    public JWTAuthMechanism() {
+        System.out.println("========== JWTAuthMechanism CREATED ==========");
+    }
+
     @Override
     public AuthenticationStatus validateRequest(HttpServletRequest request, HttpServletResponse response, HttpMessageContext httpMessageContext) throws AuthenticationException {
+        System.out.println("========== JWTAuthMechanism.validateRequest ==========");
         String authHeader = request.getHeader("Authorization");
         System.out.println("DEBUG: authHeader=" + authHeader);
         if (authHeader != null && authHeader.startsWith("Bearer ")) {

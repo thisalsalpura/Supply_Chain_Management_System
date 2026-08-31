@@ -19,6 +19,8 @@ import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.PersistenceException;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.SecurityContext;
 
 import java.util.List;
 
@@ -38,8 +40,32 @@ public class VendorBean implements VendorService {
     @Console
     private Event<String> logEvent;
 
+    @Context
+    private SecurityContext securityContext;
+
     @Override
     public ResponseModel createVendor(String name, String email) {
+        System.out.println("========== SECURITY DEBUG ==========");
+
+        System.out.println("Principal = " +
+                (securityContext.getUserPrincipal() == null
+                        ? null
+                        : securityContext.getUserPrincipal().getName()));
+
+        System.out.println("ADMIN = " +
+                securityContext.isUserInRole("ADMIN"));
+
+        System.out.println("WAREHOUSE_MANAGER = " +
+                securityContext.isUserInRole("WAREHOUSE_MANAGER"));
+
+        System.out.println("USER = " +
+                securityContext.isUserInRole("USER"));
+
+        System.out.println("VENDOR = " +
+                securityContext.isUserInRole("VENDOR"));
+
+        System.out.println("====================================");
+
         Vendor existingVendor = entityManager.createNamedQuery("Vendor.findByEmail", Vendor.class)
                 .setParameter("email", email.trim().toLowerCase())
                 .getResultList().stream().findFirst().orElse(null);
