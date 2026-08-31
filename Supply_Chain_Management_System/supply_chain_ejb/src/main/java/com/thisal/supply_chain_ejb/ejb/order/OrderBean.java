@@ -15,7 +15,6 @@ import com.thisal.supply_chain_core.dto.OrderRequestDTO;
 import com.thisal.supply_chain_core.model.ResponseModel;
 import com.thisal.supply_chain_core.service.OrderService;
 import jakarta.annotation.security.PermitAll;
-import jakarta.annotation.security.RolesAllowed;
 import jakarta.ejb.Stateless;
 import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
@@ -28,7 +27,6 @@ import java.util.List;
 
 @Stateless
 @Audited
-@RolesAllowed({"WAREHOUSE_MANAGER", "VENDOR"})
 public class OrderBean implements OrderService {
 
     @PersistenceContext(unitName = "supply_chainPU")
@@ -42,6 +40,7 @@ public class OrderBean implements OrderService {
     private Event<String> logEvent;
 
     @Override
+    @PermitAll
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public ResponseModel placeOrder(String vendorEmail, List<OrderRequestDTO> orderRequestDTOs) {
         Vendor vendor = entityManager.createNamedQuery("Vendor.findByEmail", Vendor.class)

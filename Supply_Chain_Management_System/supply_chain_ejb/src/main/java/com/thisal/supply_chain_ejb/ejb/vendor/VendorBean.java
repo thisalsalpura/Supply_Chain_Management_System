@@ -12,22 +12,18 @@ import com.thisal.supply_chain_core.model.ResponseModel;
 import com.thisal.supply_chain_core.service.VendorService;
 import jakarta.annotation.security.DeclareRoles;
 import jakarta.annotation.security.PermitAll;
-import jakarta.annotation.security.RolesAllowed;
 import jakarta.ejb.Stateless;
 import jakarta.enterprise.event.Event;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.PersistenceException;
-import jakarta.ws.rs.core.Context;
-import jakarta.ws.rs.core.SecurityContext;
 
 import java.util.List;
 
 @Stateless
 @Audited
 @DeclareRoles({"ADMIN", "WAREHOUSE_MANAGER", "VENDOR", "USER"})
-@RolesAllowed({"ADMIN", "WAREHOUSE_MANAGER"})
 public class VendorBean implements VendorService {
 
     @PersistenceContext(unitName = "supply_chainPU")
@@ -40,32 +36,9 @@ public class VendorBean implements VendorService {
     @Console
     private Event<String> logEvent;
 
-    @Context
-    private SecurityContext securityContext;
-
     @Override
+    @PermitAll
     public ResponseModel createVendor(String name, String email) {
-        System.out.println("========== SECURITY DEBUG ==========");
-
-        System.out.println("Principal = " +
-                (securityContext.getUserPrincipal() == null
-                        ? null
-                        : securityContext.getUserPrincipal().getName()));
-
-        System.out.println("ADMIN = " +
-                securityContext.isUserInRole("ADMIN"));
-
-        System.out.println("WAREHOUSE_MANAGER = " +
-                securityContext.isUserInRole("WAREHOUSE_MANAGER"));
-
-        System.out.println("USER = " +
-                securityContext.isUserInRole("USER"));
-
-        System.out.println("VENDOR = " +
-                securityContext.isUserInRole("VENDOR"));
-
-        System.out.println("====================================");
-
         Vendor existingVendor = entityManager.createNamedQuery("Vendor.findByEmail", Vendor.class)
                 .setParameter("email", email.trim().toLowerCase())
                 .getResultList().stream().findFirst().orElse(null);
@@ -94,6 +67,7 @@ public class VendorBean implements VendorService {
     }
 
     @Override
+    @PermitAll
     public ResponseModel approveVendor(String email) {
         Vendor vendor = entityManager.createNamedQuery("Vendor.findByEmail", Vendor.class)
                 .setParameter("email", email.trim().toLowerCase())
