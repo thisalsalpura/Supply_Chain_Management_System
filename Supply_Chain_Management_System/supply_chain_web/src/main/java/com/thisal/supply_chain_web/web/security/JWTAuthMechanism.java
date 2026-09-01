@@ -15,8 +15,13 @@ import java.util.List;
 @ApplicationScoped
 public class JWTAuthMechanism implements HttpAuthenticationMechanism {
 
+    public JWTAuthMechanism() {
+        System.out.println("JWTAuthMechanism instantiated");
+    }
+
     @Override
     public AuthenticationStatus validateRequest(HttpServletRequest request, HttpServletResponse response, HttpMessageContext httpMessageContext) throws AuthenticationException {
+        System.out.println("JWTAuthMechanism.validateRequest called for path=" + request.getRequestURI());
         String authHeader = request.getHeader("Authorization");
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             String token = authHeader.substring(7);
@@ -25,12 +30,18 @@ public class JWTAuthMechanism implements HttpAuthenticationMechanism {
                 List<String> roleList = JWTUtil.getRolesFromToken(token);
                 HashSet<String> roles = new HashSet<>(roleList);
                 return httpMessageContext.notifyContainerAboutLogin(username, roles);
+            } else {
+                if (httpMessageContext.isProtected()) {
+                    return httpMessageContext.responseUnauthorized();
+                }
+                return httpMessageContext.doNothing();
             }
+        } else {
             if (httpMessageContext.isProtected()) {
                 return httpMessageContext.responseUnauthorized();
             }
+            return httpMessageContext.doNothing();
         }
-        return httpMessageContext.doNothing();
     }
 
 }
