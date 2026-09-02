@@ -2,6 +2,7 @@ package com.thisal.supply_chain_ejb.ejb.user;
 
 import com.thisal.supply_chain_core.annotation.Audited;
 import com.thisal.supply_chain_core.annotation.Console;
+import com.thisal.supply_chain_core.annotation.Validated;
 import com.thisal.supply_chain_core.entity.User;
 import com.thisal.supply_chain_core.enums.ResponseStatus;
 import com.thisal.supply_chain_core.enums.Role;
@@ -23,6 +24,7 @@ import java.util.stream.Collectors;
 
 @Stateless
 @Audited
+@Validated
 public class UserBean implements UserService {
 
     @PersistenceContext(unitName = "supply_chainPU")

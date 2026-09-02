@@ -2,6 +2,7 @@ package com.thisal.supply_chain_ejb.ejb.inventory;
 
 import com.thisal.supply_chain_core.annotation.Audited;
 import com.thisal.supply_chain_core.annotation.Console;
+import com.thisal.supply_chain_core.annotation.Validated;
 import com.thisal.supply_chain_core.entity.InventoryItem;
 import com.thisal.supply_chain_core.enums.ResponseStatus;
 import com.thisal.supply_chain_core.exception.InventoryItemAlreadyExistsException;
@@ -21,6 +22,7 @@ import java.util.List;
 
 @Stateless
 @Audited
+@Validated
 public class InventoryItemBean implements InventoryItemService {
 
     @PersistenceContext(unitName = "supply_chainPU")

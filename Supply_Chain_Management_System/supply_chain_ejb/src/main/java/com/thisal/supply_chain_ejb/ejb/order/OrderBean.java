@@ -2,6 +2,7 @@ package com.thisal.supply_chain_ejb.ejb.order;
 
 import com.thisal.supply_chain_core.annotation.Audited;
 import com.thisal.supply_chain_core.annotation.Console;
+import com.thisal.supply_chain_core.annotation.Validated;
 import com.thisal.supply_chain_core.dto.OrderRequestDTO;
 import com.thisal.supply_chain_core.entity.InventoryItem;
 import com.thisal.supply_chain_core.entity.Order;
@@ -29,6 +30,7 @@ import java.util.List;
 
 @Stateless
 @Audited
+@Validated
 public class OrderBean implements OrderService {
 
     @PersistenceContext(unitName = "supply_chainPU")
