@@ -2,6 +2,7 @@ package com.thisal.supply_chain_ejb.ejb.order;
 
 import com.thisal.supply_chain_core.annotation.Audited;
 import com.thisal.supply_chain_core.annotation.Console;
+import com.thisal.supply_chain_core.dto.OrderRequestDTO;
 import com.thisal.supply_chain_core.entity.InventoryItem;
 import com.thisal.supply_chain_core.entity.Order;
 import com.thisal.supply_chain_core.entity.OrderItem;
@@ -11,7 +12,6 @@ import com.thisal.supply_chain_core.exception.InsufficientStockException;
 import com.thisal.supply_chain_core.exception.InventoryItemNotFoundException;
 import com.thisal.supply_chain_core.exception.VendorNotFoundException;
 import com.thisal.supply_chain_core.mapper.Mapper;
-import com.thisal.supply_chain_core.dto.OrderRequestDTO;
 import com.thisal.supply_chain_core.model.ResponseModel;
 import com.thisal.supply_chain_core.service.OrderService;
 import jakarta.annotation.security.PermitAll;

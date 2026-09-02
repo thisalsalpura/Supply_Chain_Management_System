@@ -1,15 +1,16 @@
 package com.thisal.supply_chain_ejb.ejb.vendor;
 
 import com.thisal.supply_chain_core.model.ResponseModel;
+import jakarta.ejb.EJB;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit5.ArquillianExtension;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import jakarta.ejb.EJB;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @ExtendWith(ArquillianExtension.class)
 public class VendorBeanIT {
@@ -30,7 +31,8 @@ public class VendorBeanIT {
     public void createVendor_shouldPersist_andReturnResponse() {
         assertNotNull(vendorBean, "VendorBean should be injected by the Container.");
 
-        ResponseModel response = vendorBean.createVendor("arquillian-it", "arquillian-it@example.com");
+        String email = "arquillian-it-" + System.currentTimeMillis() + "@example.com";
+        ResponseModel response = vendorBean.createVendor("arquillian-it", email);
 
         assertNotNull(response);
         assertEquals("Vendor created Successfully!", response.getMessage());
