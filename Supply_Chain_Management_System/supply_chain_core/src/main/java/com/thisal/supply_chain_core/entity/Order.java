@@ -34,7 +34,7 @@ public class Order {
     private List<OrderItem> orderItems = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "order_status", nullable = false, length = 15)
+    @Column(name = "order_status", nullable = false, length = 20)
     private OrderStatus orderStatus;
 
     @Setter(AccessLevel.NONE)

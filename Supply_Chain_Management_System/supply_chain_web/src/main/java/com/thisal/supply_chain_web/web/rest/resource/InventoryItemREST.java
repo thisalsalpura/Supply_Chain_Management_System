@@ -3,6 +3,7 @@ package com.thisal.supply_chain_web.web.rest.resource;
 import com.thisal.supply_chain_core.dto.InventoryItemDTO;
 import com.thisal.supply_chain_core.model.ResponseModel;
 import com.thisal.supply_chain_core.service.InventoryItemService;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.ejb.EJB;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.ws.rs.*;
@@ -19,6 +20,7 @@ public class InventoryItemREST {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed("WAREHOUSE_MANAGER")
     public Response createInventoryItem(InventoryItemDTO inventoryItemDTO) {
         ResponseModel responseModel = inventoryItemService.createInventoryItem(inventoryItemDTO.getSku(), inventoryItemDTO.getName(), inventoryItemDTO.getQtyOnHand(), inventoryItemDTO.getReorderThreshold());
         return Response.status(responseModel.getStatus().getHttpStatus())
@@ -30,6 +32,7 @@ public class InventoryItemREST {
     @Path("/stock/{sku}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed("WAREHOUSE_MANAGER")
     public Response updateStock(@PathParam("sku") String sku, InventoryItemDTO inventoryItemDTO) {
         ResponseModel responseModel = inventoryItemService.updateStock(sku, inventoryItemDTO.getQtyOnHand());
         return Response.status(responseModel.getStatus().getHttpStatus())

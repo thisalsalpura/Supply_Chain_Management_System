@@ -28,7 +28,7 @@ public class InventoryMonitorBean {
     @Inject
     private Event<LowStockAlertModel> lowStockAlertEvent;
 
-    // @Schedule(hour = "*", minute = "*", second = "0, 30", persistent = false)
+    @Schedule(hour = "*", minute = "*/5", persistent = false)
     public void checkLowStock() {
         List<InventoryItem> inventoryItemList = entityManager.createNamedQuery("InventoryItem.findLowStock", InventoryItem.class)
                 .getResultList();
