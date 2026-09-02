@@ -9,6 +9,7 @@ import com.thisal.supply_chain_core.exception.InventoryItemNotFoundException;
 import com.thisal.supply_chain_core.mapper.Mapper;
 import com.thisal.supply_chain_core.model.ResponseModel;
 import com.thisal.supply_chain_core.service.InventoryItemService;
+import jakarta.annotation.security.PermitAll;
 import jakarta.ejb.Stateless;
 import jakarta.enterprise.event.Event;
 import jakarta.inject.Inject;
@@ -33,6 +34,7 @@ public class InventoryItemBean implements InventoryItemService {
     private Event<String> logEvent;
 
     @Override
+    @PermitAll
     public ResponseModel createInventoryItem(String sku, String name, int qtyOnHand, int reorderThreshold) {
         InventoryItem existingInventoryItem = entityManager.createNamedQuery("InventoryItem.findBySku", InventoryItem.class)
                 .setParameter("sku", sku)
@@ -64,6 +66,7 @@ public class InventoryItemBean implements InventoryItemService {
     }
 
     @Override
+    @PermitAll
     public ResponseModel updateStock(String sku, int newQty) {
         InventoryItem inventoryItem = entityManager.createNamedQuery("InventoryItem.findBySku", InventoryItem.class)
                 .setParameter("sku", sku)
@@ -83,6 +86,7 @@ public class InventoryItemBean implements InventoryItemService {
     }
 
     @Override
+    @PermitAll
     public ResponseModel getAllInventoryItems() {
         List<InventoryItem> inventoryItemList = entityManager.createNamedQuery("InventoryItem.findAll", InventoryItem.class)
                 .getResultList();
@@ -93,6 +97,7 @@ public class InventoryItemBean implements InventoryItemService {
     }
 
     @Override
+    @PermitAll
     public ResponseModel getLowStockInventoryItems() {
         List<InventoryItem> inventoryItemList = entityManager.createNamedQuery("InventoryItem.findLowStock", InventoryItem.class)
                 .getResultList();
