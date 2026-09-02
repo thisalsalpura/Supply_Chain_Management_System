@@ -9,6 +9,7 @@ import com.thisal.supply_chain_core.exception.InsufficientStockException;
 import com.thisal.supply_chain_core.exception.VendorNotFoundException;
 import com.thisal.supply_chain_core.mapper.Mapper;
 import com.thisal.supply_chain_core.model.ResponseModel;
+import com.thisal.supply_chain_ejb.ejb.audit.AuditLogBean;
 import jakarta.enterprise.event.Event;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
@@ -32,6 +33,9 @@ class OrderBeanTest {
 
     @Mock
     private EntityManager entityManager;
+
+    @Mock
+    private AuditLogBean auditLogBean;
 
     @Mock
     private Mapper mapper;
