@@ -18,8 +18,8 @@ public class JWTUtil {
             .getOptionalValue("jwt.secret", String.class)
             .orElseThrow(() -> new IllegalStateException("jwt.secret is not configured! Set JWT_SECRET Environment Variable."));
     private static final Algorithm ALGORITHM = Algorithm.HMAC256(SECRET);
-    private static final long EXPIRATION_TIME = 3600;
     private static final JWTVerifier VERIFIER = JWT.require(ALGORITHM).build();
+    private static final long EXPIRATION_TIME = 3600;
 
     public static String generateToken(String username, List<String> roles) {
         Instant now = Instant.now();

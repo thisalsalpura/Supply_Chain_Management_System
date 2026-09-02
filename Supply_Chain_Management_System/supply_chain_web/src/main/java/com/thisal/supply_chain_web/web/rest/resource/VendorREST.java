@@ -3,10 +3,10 @@ package com.thisal.supply_chain_web.web.rest.resource;
 import com.thisal.supply_chain_core.dto.VendorDTO;
 import com.thisal.supply_chain_core.model.ResponseModel;
 import com.thisal.supply_chain_core.service.VendorService;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.ejb.EJB;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.ws.rs.*;
-import jakarta.annotation.security.RolesAllowed;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
