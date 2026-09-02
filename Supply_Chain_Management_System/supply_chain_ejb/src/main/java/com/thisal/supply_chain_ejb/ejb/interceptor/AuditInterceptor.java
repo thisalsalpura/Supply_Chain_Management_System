@@ -27,14 +27,7 @@ public class AuditInterceptor {
         String methodName = ctx.getMethod().getName();
         LocalDateTime start = LocalDateTime.now();
         logEvent.fire(className + "." + methodName + " called with " + Arrays.asList(ctx.getParameters()) + " parameters at " + start + "!");
-        try {
-            Object result = ctx.proceed();
-            logEvent.fire(className + "." + methodName + " completed Successfully!");
-            return result;
-        } catch (Exception e) {
-            logEvent.fire(e.getMessage());
-            throw new RuntimeException(e.getMessage());
-        }
+        return ctx.proceed();
     }
 
 }
