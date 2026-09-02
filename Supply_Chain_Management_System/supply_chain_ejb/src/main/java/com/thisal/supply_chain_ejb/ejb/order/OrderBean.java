@@ -14,7 +14,9 @@ import com.thisal.supply_chain_core.exception.VendorNotFoundException;
 import com.thisal.supply_chain_core.mapper.Mapper;
 import com.thisal.supply_chain_core.model.ResponseModel;
 import com.thisal.supply_chain_core.service.OrderService;
+import com.thisal.supply_chain_ejb.ejb.audit.AuditLogBean;
 import jakarta.annotation.security.PermitAll;
+import jakarta.ejb.EJB;
 import jakarta.ejb.Stateless;
 import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
@@ -31,6 +33,9 @@ public class OrderBean implements OrderService {
 
     @PersistenceContext(unitName = "supply_chainPU")
     private EntityManager entityManager;
+
+    @EJB
+    private AuditLogBean auditLogBean;
 
     @Inject
     private Mapper mapper;
@@ -55,10 +60,12 @@ public class OrderBean implements OrderService {
                         .setParameter("sku", orderRequestDTO.getSku())
                         .getResultList().stream().findFirst().orElseThrow(() -> {
                             logEvent.fire("Inventory Item with " + orderRequestDTO.getSku() + " is not Found!");
+                            auditLogBean.logFailedOperation("Place Order", "Inventory Item with " + orderRequestDTO.getSku() + " is not Found!");
                             return new InventoryItemNotFoundException("Inventory Item with " + orderRequestDTO.getSku() + " is not Found!");
                         });
                 if (inventoryItem.getQtyOnHand() < orderRequestDTO.getQty()) {
                     logEvent.fire("Inventory Item with " + inventoryItem.getSku() + " is only have " + inventoryItem.getQtyOnHand() + " Items!");
+                    auditLogBean.logFailedOperation("Place Order", "Inventory Item with " + inventoryItem.getSku() + " is only have " + inventoryItem.getQtyOnHand() + " Items!");
                     throw new InsufficientStockException("Inventory Item with " + inventoryItem.getSku() + " is only have " + inventoryItem.getQtyOnHand() + " Items!");
                 } else {
                     inventoryItem.setQtyOnHand(inventoryItem.getQtyOnHand() - orderRequestDTO.getQty());
@@ -79,6 +86,7 @@ public class OrderBean implements OrderService {
                     .build();
         } else {
             logEvent.fire("Vendor with " + vendorEmail + " is not Found!");
+            auditLogBean.logFailedOperation("Place Order", "Vendor with " + vendorEmail + " is not Found!");
             throw new VendorNotFoundException("Vendor with " + vendorEmail + " is not Found!");
         }
     }
